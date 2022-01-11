@@ -19,9 +19,36 @@ allprojects {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+        maven {
+            url "https://maven.pkg.github.com/fubotv/fubo-schema"
+            credentials {
+                username "${getGitHubActor()}"
+                password "${getGitHubToken()}"
+            }
+        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def getGitHubActor() {
+    if (System.env.CI) {
+        return "$System.env.GITHUB_ACTOR"
+    } else {
+        final Properties properties = new Properties();
+        properties.load(file("./local.properties").newDataInputStream());
+        return properties.getProperty("GITHUB_ACTOR")
+    }
+}
+
+def getGitHubToken() {
+    if (System.env.CI) {
+        return "$System.env.GITHUB_TOKEN"
+    } else {
+        final Properties properties = new Properties();
+        properties.load(file("./local.properties").newDataInputStream());
+        return properties.getProperty("GITHUB_TOKEN")
+    }
 }

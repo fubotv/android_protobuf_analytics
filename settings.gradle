@@ -1,0 +1,3 @@
+rootProject.name = "android_protobuf_analytics"
+include ':app'
+include ':analytics'
